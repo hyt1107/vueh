@@ -118,7 +118,7 @@ app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
 app.use(store);
-// store.dispatch('checkUser');
+store.dispatch('checkUser');
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
