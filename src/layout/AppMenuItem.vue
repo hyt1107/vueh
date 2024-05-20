@@ -2,6 +2,7 @@
 import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLayout } from '@/layout/composables/layout';
+import { useConfirm } from 'primevue/useconfirm'; // Import useConfirm
 
 const route = useRoute();
 
@@ -28,6 +29,7 @@ const props = defineProps({
 
 const isActiveMenu = ref(false);
 const itemKey = ref(null);
+const confirmPopup = useConfirm(); // Initialize useConfirm
 
 onBeforeMount(() => {
     itemKey.value = props.parentItemKey ? props.parentItemKey + '-' + props.index : String(props.index);
@@ -43,6 +45,7 @@ watch(
         isActiveMenu.value = newVal === itemKey.value || newVal.startsWith(itemKey.value + '-');
     }
 );
+
 const itemClick = (event, item) => {
     if (item.disabled) {
         event.preventDefault();
@@ -56,7 +59,21 @@ const itemClick = (event, item) => {
     }
 
     if (item.command) {
-        item.command({ originalEvent: event, item: item });
+        if (item.label === 'Logout') {
+            confirmPopup.require({
+                target: event.currentTarget,
+                message: 'Are you sure you want to logout?',
+                icon: 'pi pi-exclamation-triangle',
+                accept: () => {
+                    item.command({ originalEvent: event, item: item });
+                },
+                reject: () => {
+                    // Handle reject action if needed
+                }
+            });
+        } else {
+            item.command({ originalEvent: event, item: item });
+        }
     }
 
     const foundItemKey = item.items ? (isActiveMenu.value ? props.parentItemKey : itemKey) : itemKey.value;
@@ -84,7 +101,7 @@ const checkActiveRoute = (item) => {
         </router-link>
         <Transition v-if="item.items && item.visible !== false" name="layout-submenu">
             <ul v-show="root ? true : isActiveMenu" class="layout-submenu">
-                <app-menu-item v-for="(child, i) in item.items" :key="child" :index="i" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
+                <app-menu-item v-for="(child, i) in item.items" :key="child.label" :index="i" :item="child" :parentItemKey="itemKey" :root="false"></app-menu-item>
             </ul>
         </Transition>
     </li>

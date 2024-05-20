@@ -105,7 +105,7 @@ import TreeSelect from 'primevue/treeselect';
 import TreeTable from 'primevue/treetable';
 import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
-
+import store from './store';
 import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
@@ -117,6 +117,8 @@ app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
+app.use(store);
+// store.dispatch('checkUser');
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
