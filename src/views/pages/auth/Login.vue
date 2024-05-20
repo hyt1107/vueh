@@ -81,7 +81,7 @@ console.log("storedUser",storedUser)
         </div>
          
     </div>
-    <AppConfig simple />
+    <!-- <AppConfig simple /> -->
 </template>
 
 <style scoped>
